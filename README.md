@@ -8,9 +8,9 @@ Maximilian Schwarzmüller Course Codes for The Shop App
 #### "npm install"
 #### "npm start"
 
-## How to install on directory
+
  
- ###### What's inside?
+ #### What's inside?
 - React Native Navigation 4.0 (BottomBar - StackNavigate - Drawer)
 - Redux
 - Hooks (useEffect - useState - useReducer)
