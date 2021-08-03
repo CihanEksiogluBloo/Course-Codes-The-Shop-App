@@ -1,17 +1,17 @@
 import React, { useEffect, useCallback, useReducer } from "react";
 import {
   StyleSheet,
-  Text,
   View,
-  TextInput,
   ScrollView,
   Alert,
+  KeyboardAvoidingView,
 } from "react-native";
 import CheckMark from "../../components/UI/Buttons/ChackMark";
 import Color from "../../constants/Color";
 import { useSelector, useDispatch } from "react-redux";
 import * as productActions from "../../store/actions/products";
-import { titleChangeHandler } from "../../functions/screens/EditProductScreenFunctions";
+import { inputChangeHandler } from "../../functions/screens/EditProductScreenFunctions";
+import Input from "../../components/UI/Inputs/Input";
 
 //useReducer types
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
@@ -101,37 +101,37 @@ const EditProductScreen = ({ navigation }) => {
   }, [submitHandler]);
 
   return (
-    <ScrollView>
-      <View style={styles.form}>
-        <View style={styles.formControl}>
-          <Text style={styles.label}>Title</Text>
-          <TextInput
-            style={styles.input}
-            value={formState.inputValues.title}
+    <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={100}>
+      <ScrollView>
+        <View style={styles.form}>
+          <Input
+            Label="Title"
+            ErrorText="Please enter valid Title"
             onChangeText={(change) =>
-              titleChangeHandler(
+              inputChangeHandler(
                 change,
                 FORM_INPUT_UPDATE,
                 dispatchFormState,
-                "title"
+                "title",
+                true
               )
             }
+            Value={formState.inputValues.title}
+            InputValidities={formState.inputValidities.title}
             keyboardType="default"
             autoCapitalize="sentences"
             autoCorrect
             returnKeyType="next"
+            required={true}
           />
-          {!formState.inputValidities.title && (
-            <Text>Please enter a valid title!</Text>
-          )}
-        </View>
-        <View style={styles.formControl}>
-          <Text style={styles.label}>Image URL</Text>
-          <TextInput
-            style={styles.input}
-            value={formState.inputValues.imageUrl}
+
+          <Input
+            Label="Image URL"
+            ErrorText="Please enter valid Image URL"
+            Value={formState.inputValues.imageUrl}
+            InputValidities={formState.inputValidities.imageUrl}
             onChangeText={(change) =>
-              titleChangeHandler(
+              inputChangeHandler(
                 change,
                 FORM_INPUT_UPDATE,
                 dispatchFormState,
@@ -139,32 +139,38 @@ const EditProductScreen = ({ navigation }) => {
               )
             }
           />
-        </View>
-        {!editedProduct ? (
-          <View style={styles.formControl}>
-            <Text style={styles.label}>Price</Text>
-            <TextInput
-              style={styles.input}
-              value={formState.inputValues.price}
+
+          {!editedProduct ? (
+            <Input
+              Label="Price"
+              ErrorText="Please enter valid Price"
+              Value={formState.inputValues.price}
+              InputValidities={formState.inputValidities.price}
+              keyboardType="decimal-pad"
+              required={true}
               onChangeText={(change) =>
-                titleChangeHandler(
+                inputChangeHandler(
                   change,
                   FORM_INPUT_UPDATE,
                   dispatchFormState,
-                  "price"
+                  "price",
+                  true,
+                  0.1
                 )
               }
-              keyboardType="decimal-pad"
             />
-          </View>
-        ) : null}
-        <View style={styles.formControl}>
-          <Text style={styles.label}>Desc</Text>
-          <TextInput
-            style={styles.input}
-            value={formState.inputValues.description}
+          ) : null}
+
+          <Input
+            Label="Description"
+            ErrorText="Please enter valid Description"
+            Value={formState.inputValues.description}
+            InputValidities={formState.inputValidities.description}
+            multiline
+            autoCorrect
+            numberOfLines={3}
             onChangeText={(change) =>
-              titleChangeHandler(
+              inputChangeHandler(
                 change,
                 FORM_INPUT_UPDATE,
                 dispatchFormState,
@@ -173,8 +179,8 @@ const EditProductScreen = ({ navigation }) => {
             }
           />
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -190,14 +196,6 @@ EditProductScreen.navigationOptions = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   form: { margin: 20 },
-  formControl: { width: "100%" },
-  label: { fontFamily: "open-sans", marginVertical: 8 },
-  input: {
-    paddingHorizontal: 2,
-    paddingVertical: 5,
-    borderBottomColor: Color.greyish,
-    borderBottomWidth: 1,
-  },
 });
 
 export default EditProductScreen;
