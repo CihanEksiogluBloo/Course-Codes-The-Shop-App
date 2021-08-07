@@ -6,14 +6,13 @@ import ShopNavigator from "./navigation/ShopNavigator";
 import AppLoading from "expo-app-loading";
 import { useFonts } from "expo-font";
 // redux
-import { createStore, combineReducers } from "redux";
+import { createStore, combineReducers, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
+import ReduxThunk from "redux-thunk";
 
 import productsReducer from "./store/reducers/products";
 import cartReducer from "./store/reducers/cart";
 import ordersReducer from "./store/reducers/orders";
-
-import { composeWithDevTools } from "redux-devtools-extension";
 
 const rootReducer = combineReducers({
   products: productsReducer,
@@ -21,7 +20,7 @@ const rootReducer = combineReducers({
   orders: ordersReducer,
 });
 
-const store = createStore(rootReducer, composeWithDevTools());
+const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 export default function App() {
   let [fontsLoaded] = useFonts({

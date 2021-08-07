@@ -1,10 +1,11 @@
-import React, { useEffect, useCallback, useReducer } from "react";
+import React, { useState, useEffect, useCallback, useReducer } from "react";
 import {
   StyleSheet,
   View,
   ScrollView,
   Alert,
   KeyboardAvoidingView,
+  ActivityIndicator,
 } from "react-native";
 import CheckMark from "../../components/UI/Buttons/ChackMark";
 import Color from "../../constants/Color";
@@ -48,6 +49,9 @@ const EditProductScreen = ({ navigation }) => {
     state.products.userProducts.find((prod) => prod.id === prodId)
   );
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
+
   const dispatch = useDispatch();
   const initialState = {
     inputValues: {
@@ -67,38 +71,60 @@ const EditProductScreen = ({ navigation }) => {
 
   const [formState, dispatchFormState] = useReducer(formReducer, initialState);
 
-  const submitHandler = useCallback(() => {
+  useEffect(() => {
+    if (error) {
+      Alert.alert("An error occurred!", error, [{ text: "Okay" }]);
+    }
+  }, [error]);
+
+  const submitHandler = useCallback(async () => {
     if (!formState.formIsValid) {
       Alert.alert("Wrong input!", "Please check your errors in the form.", [
         { text: "Okey" },
       ]);
       return;
     }
-    if (editedProduct) {
-      dispatch(
-        productActions.updateProduct(
-          prodId,
-          formState.inputValues.title,
-          formState.inputValues.description,
-          formState.inputValues.imageUrl
-        )
-      );
-    } else {
-      dispatch(
-        productActions.createProduct(
-          formState.inputValues.title,
-          formState.inputValues.description,
-          formState.inputValues.imageUrl,
-          formState.inputValues.price
-        )
-      );
+    setError(null);
+    setIsLoading(true);
+    try {
+      if (editedProduct) {
+        await dispatch(
+          productActions.updateProduct(
+            prodId,
+            formState.inputValues.title,
+            formState.inputValues.description,
+            formState.inputValues.imageUrl
+          )
+        );
+      } else {
+        await dispatch(
+          productActions.createProduct(
+            formState.inputValues.title,
+            formState.inputValues.description,
+            formState.inputValues.imageUrl,
+            Number(formState.inputValues.price)
+          )
+        );
+      }
+      navigation.goBack();
+    } catch (error) {
+      setError(error.message);
     }
-    navigation.goBack();
+
+    setIsLoading(false);
   }, [dispatch, prodId, formState]);
 
   useEffect(() => {
     navigation.setParams({ submit: submitHandler });
   }, [submitHandler]);
+
+  if (isLoading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={Color.primary} />
+      </View>
+    );
+  }
 
   return (
     <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={100}>
@@ -196,6 +222,7 @@ EditProductScreen.navigationOptions = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   form: { margin: 20 },
+  centered: { flex: 1, alignItems: "center", justifyContent: "center" },
 });
 
 export default EditProductScreen;
