@@ -4,7 +4,7 @@ import Color from "../../constants/Color";
 import CartItem from "./CartItem";
 import Card from "../UI/Container/Card";
 
-const OrderItem = ({ Amount, Date, items }) => {
+const OrderItem = ({ Amount, Date, items, hideTrash }) => {
   // <CartItem onRemove quantity title amount />
   const [showDetail, setShowDetail] = useState(false);
   return (

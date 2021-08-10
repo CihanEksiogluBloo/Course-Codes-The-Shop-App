@@ -8,7 +8,7 @@ const Input = (props) => {
       <Text style={styles.label}>{props.Label}</Text>
 
       <TextInput {...props} style={styles.input} value={props.Value} />
-      {!props.InputValidities && props.required && (
+      {!props.InputValidities && props.required && props.Value != "" && (
         <View style={styles.errorContainer}>
           <Text style={styles.errorMessage}>{props.ErrorText}</Text>
         </View>

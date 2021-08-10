@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Button, FlatList, Alert } from "react-native";
+import { StyleSheet, Button, FlatList } from "react-native";
 import ProductItem from "../../components/Shop/ProductItem";
 import { useSelector, useDispatch } from "react-redux";
 import HamburgerButton from "../../components/UI/Buttons/HamburgerButton";
@@ -9,10 +9,19 @@ import {
   editProductHandler,
   deleteHandler,
 } from "../../functions/screens/UserProductScreenFunctions";
+import CenteredText from "../../components/UI/Container/CenteredText";
 
 const UserProductScreen = ({ navigation }) => {
   const userProducts = useSelector((state) => state.products.userProducts);
   const dispatch = useDispatch();
+
+  if (userProducts.length === 0) {
+    return (
+      <CenteredText>
+        No product found , maybe start creating some?
+      </CenteredText>
+    );
+  }
 
   return (
     <FlatList

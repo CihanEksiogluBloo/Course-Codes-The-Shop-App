@@ -11,6 +11,7 @@ import OrderItem from "../../components/Shop/OrderItem";
 import HamburgerButton from "../../components/UI/Buttons/HamburgerButton";
 import Color from "../../constants/Color";
 import * as ordersActions from "../../store/actions/orders";
+import CenteredText from "../../components/UI/Container/CenteredText";
 
 const OrdersScreen = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -18,12 +19,17 @@ const OrdersScreen = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchOrd = async () => {
-      await dispatch(ordersActions.fetchOrders());
-    };
-    fetchOrd();
-    setIsLoading(false);
-  }, []);
+    setIsLoading(true);
+    dispatch(ordersActions.fetchOrders()).then(() => {
+      setIsLoading(false);
+    });
+  }, [dispatch]);
+
+  if (orders.length === 0) {
+    return (
+      <CenteredText>No orders found, Let's start ordering some product?</CenteredText>
+    );
+  }
 
   if (isLoading) {
     return (

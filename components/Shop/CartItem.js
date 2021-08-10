@@ -8,7 +8,7 @@ const CartItem = ({
   quantity,
   title,
   amount,
-  deleteable = false,
+  deleteable,
 }) => {
   return (
     <View style={styles.cartItem}>
@@ -18,7 +18,7 @@ const CartItem = ({
       </Text>
       <View style={styles.itemData}>
         <Text style={styles.mainText}>{amount} </Text>
-        {deleteable ? (
+        {deleteable != true ? (
           <TouchableOpacity onPress={onRemove} style={styles.deleteButton}>
             <Feather name="trash" size={24} color="red" />
           </TouchableOpacity>

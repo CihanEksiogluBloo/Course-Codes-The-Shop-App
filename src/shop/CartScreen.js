@@ -46,7 +46,7 @@ const CartScreen = () => {
     <View style={styles.screen}>
       <Card style={styles.summary}>
         <Text style={styles.summaryText}>
-          Total : <Text style={styles.amount}>${cartTotalAmount}</Text>
+          Total : <Text style={styles.amount}>${cartTotalAmount.toFixed(2)}</Text>
         </Text>
         {isLoading ? (
           <ActivityIndicator size="small" color={Color.primary} />
@@ -74,7 +74,7 @@ const CartScreen = () => {
               quantity={item.quantity}
               title={item.productTitle}
               amount={item.productPrice}
-              deleteable={true}
+              deleteable={false}
             />
           );
         }}
