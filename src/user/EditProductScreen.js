@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback, useReducer } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useReducer,
+  useLayoutEffect,
+} from "react";
 import {
   StyleSheet,
   View,
@@ -43,8 +49,8 @@ const formReducer = (state, action) => {
   return state;
 };
 
-const EditProductScreen = ({ navigation }) => {
-  const prodId = navigation.getParam("productId");
+const EditProductScreen = ({ navigation, route }) => {
+  const prodId = route.params ? route.params.productId : null;
   const editedProduct = useSelector((state) =>
     state.products.userProducts.find((prod) => prod.id === prodId)
   );
@@ -114,8 +120,10 @@ const EditProductScreen = ({ navigation }) => {
     setIsLoading(false);
   }, [dispatch, prodId, formState]);
 
-  useEffect(() => {
-    navigation.setParams({ submit: submitHandler });
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => <CheckMark onPress={submitHandler} />,
+    });
   }, [submitHandler]);
 
   if (isLoading) {
@@ -210,13 +218,10 @@ const EditProductScreen = ({ navigation }) => {
   );
 };
 
-EditProductScreen.navigationOptions = ({ navigation }) => {
-  const submitFunction = navigation.getParam("submit");
+export const screenOptions = ({ navigation, route }) => {
+  const routeParams = route.params ? route.params : {};
   return {
-    headerTitle: navigation.getParam("productId")
-      ? "Edit Product"
-      : "Add Product",
-    headerRight: () => <CheckMark onPress={submitFunction} />,
+    headerTitle: routeParams.productId ? "Edit Product" : "Add Product",
   };
 };
 

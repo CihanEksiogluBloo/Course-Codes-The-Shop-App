@@ -5,14 +5,14 @@ import Color from "../constants/Color";
 import { useDispatch } from "react-redux";
 import * as authActions from "../store/actions/auth";
 
-const StartupScreen = ({ navigation }) => {
+const StartupScreen = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     const tryLogin = async () => {
       const userData = await AsyncStorage.getItem("userData");
       if (!userData) {
-        navigation.navigate("Auth");
+        dispatch(authActions.setDidTryAL());
         return;
       }
       const transformedData = JSON.parse(userData);
@@ -20,13 +20,12 @@ const StartupScreen = ({ navigation }) => {
       const expirationDate = new Date(expiryDate);
 
       if (expirationDate <= new Date() || !token || !userId) {
-        navigation.navigate("Auth");
+        dispatch(authActions.setDidTryAL());
         return;
       }
       const expirationTime = expirationDate.getTime() - new Date().getTime();
 
       dispatch(authActions.authenticate(userId, token, expirationTime));
-      navigation.navigate("Shop");
     };
     tryLogin();
   }, [dispatch]);

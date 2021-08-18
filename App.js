@@ -1,6 +1,6 @@
 import React from "react";
 
-import NavigationContainer from "./navigation/NavigationContainer";
+import AppNavigator from "./navigation/AppNavigator";
 
 //font
 import AppLoading from "expo-app-loading";
@@ -36,7 +36,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <NavigationContainer />
+      <AppNavigator />
     </Provider>
   );
 }

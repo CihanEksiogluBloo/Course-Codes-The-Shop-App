@@ -59,7 +59,7 @@ const UserProductScreen = ({ navigation }) => {
   );
 };
 
-UserProductScreen.navigationOptions = ({ navigation }) => {
+export const screenOptions = ({ navigation }) => {
   return {
     headerTitle: "User Product",
     headerLeft: () => (
