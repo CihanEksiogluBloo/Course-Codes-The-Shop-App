@@ -13,4 +13,8 @@ Maximilian Schwarzmüller Course Codes for The Shop App
  #### What's inside?
 - React Native Navigation 4.0 (BottomBar - StackNavigate - Drawer)
 - Redux
+- Redux Thunk
+- Firebase Real Time Database
 - Hooks (useEffect - useState - useReducer)
+- Authentication with firebase
+
