@@ -7,7 +7,6 @@ export const fetchOrders = () => {
     try {
       const userId = getState().auth.userId;
 
-
       const response = await fetch(
         `https://theshopapp-6c970-default-rtdb.europe-west1.firebasedatabase.app/orders/${userId}.json`
       );
@@ -73,5 +72,26 @@ export const addOrder = (cartItems, totalAmount) => {
         date,
       },
     });
+
+    // Server side processes
+
+    for (const cartItem of cartItems) {
+      const pushToken = cartItem.productPushToken;
+
+      fetch("https://exp.host/--/api/v2/push/send", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Accept-Encoding": "gzip,deflate",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          to: pushToken,
+          data: { extraData: "Some Data" },
+          title: "Order was placed!",
+          body: cartItem.productTitle,
+        }),
+      });
+    }
   };
 };

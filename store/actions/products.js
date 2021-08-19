@@ -1,4 +1,6 @@
 import Product from "../../models/product";
+import * as Notifications from "expo-notifications";
+import { Alert } from "react-native";
 
 export const DELETE_PRODUCT = "DELETE_PRODUCT";
 export const CREATE_PRODUCT = "CREATE_PRODUCT";
@@ -9,7 +11,6 @@ export const fetchProducts = () => {
   return async (dispatch, getState) => {
     const userId = getState().auth.userId;
     try {
-
       const response = await fetch(
         "https://theshopapp-6c970-default-rtdb.europe-west1.firebasedatabase.app/products.json"
       );
@@ -26,6 +27,7 @@ export const fetchProducts = () => {
             i,
             resData[i].ownerId,
             resData[i].title,
+            resData[i].ownerPushToken,
             resData[i].imageUrl,
             resData[i].description,
             resData[i].price
@@ -65,6 +67,36 @@ export const deleteProduct = (productId) => {
 
 export const createProduct = (title, description, imageUrl, price) => {
   return async (dispatch, getState) => {
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
+
+    let finalStatus = existingStatus;
+    let pushNotificationToken;
+
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+
+    if (finalStatus !== "granted") {
+      Alert.alert(
+        "Notification Permission Error!",
+        "Failed to get push token for push notification!",
+        [{ text: "Okey" }]
+      );
+
+      const { status: lastResponse } =
+        await Notifications.getPermissionsAsync();
+      finalStatus = lastResponse;
+    }
+
+    if (finalStatus === "granted") {
+      pushNotificationToken = (await Notifications.getExpoPushTokenAsync())
+        .data;
+    } else {
+      pushNotificationToken = null;
+    }
+
     const token = getState().auth.token;
     const userId = getState().auth.userId;
 
@@ -81,6 +113,7 @@ export const createProduct = (title, description, imageUrl, price) => {
           imageUrl,
           price,
           ownerId: userId,
+          ownerPushToken: pushNotificationToken,
         }),
       }
     );
@@ -96,6 +129,7 @@ export const createProduct = (title, description, imageUrl, price) => {
         imageUrl,
         price,
         ownerId: userId,
+        pushToken: pushNotificationToken
       },
     });
   };

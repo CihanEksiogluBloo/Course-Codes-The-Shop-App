@@ -34,6 +34,7 @@ export default (state = initialState, action) => {
         action.payload.id,
         action.payload.ownerId,
         action.payload.title,
+        action.payload.pushToken,
         action.payload.imageUrl,
         action.payload.description,
         action.payload.price
@@ -52,6 +53,7 @@ export default (state = initialState, action) => {
         action.pid.toString(),
         state.userProducts[productIndex].ownerId,
         action.payload.title,
+        action.userProducts[productIndex].pushToken,
         action.payload.imageUrl,
         action.payload.description,
         state.userProducts[productIndex].price

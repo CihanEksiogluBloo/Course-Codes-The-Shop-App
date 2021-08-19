@@ -1,7 +1,7 @@
 import React from "react";
 
 import AppNavigator from "./navigation/AppNavigator";
-import 'react-native-gesture-handler';
+import "react-native-gesture-handler";
 
 //font
 import AppLoading from "expo-app-loading";
@@ -15,6 +15,18 @@ import productsReducer from "./store/reducers/products";
 import cartReducer from "./store/reducers/cart";
 import ordersReducer from "./store/reducers/orders";
 import authReducer from "./store/reducers/auth";
+
+import * as Notifications from "expo-notifications";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => {
+    return {
+      shouldShowAlert: true,
+      shouldPlaySound: false,
+      shouldSetBadge: false,
+    };
+  },
+});
 
 const rootReducer = combineReducers({
   products: productsReducer,
